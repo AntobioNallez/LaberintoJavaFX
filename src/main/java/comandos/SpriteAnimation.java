@@ -17,37 +17,44 @@ import javafx.util.Duration;
  */
 public class SpriteAnimation extends Transition {
     
+   //Valores para ir hacia abajo (10,2,2,3,38,32), hacia arriba(10,2,66,3,38,32), hacia la derecha(10,2,130,3,38,32),hacia la izquierda(10,2,196,3,38,32);
+   //Estos valores son funcionales para la foto que yo he puesto otra foto habria que ajustarlos o cambiar la foto;
    private final ImageView imageView;
-   private final int count;
-   private final int columna;
-   private int offSetX;
-   private int offSetY;
-   private final int height;
-   private final int width;
-
-    public SpriteAnimation(ImageView imageView, int count, int columna, int offSetX, int offSetY, int height, int width, Duration duration) {
+   private final int count = 10; //Frames totales
+   private final int columna = 2; //Columnas, va de izquierda a derecha y de arriba a abajo
+   private int offSetX; 
+   private final int offSetY = 3; //Distancia desde el inicio de la imagen hasta el primer pixel en el eje Y
+   private final int height = 38; //Altura de los frames
+   private final int width = 32; //Anchura de los frames
+   
+   /**
+    * 
+    * @param imageView Foto que contiene los frames de la animación
+    * @param offSetX Distancia desde el inicio de la imagen hasta el primer pixel en el eje X
+    * @param duration Duración de la animación
+    */
+    public SpriteAnimation(ImageView imageView, int offSetX, Duration duration) {
         this.imageView = imageView;
-        this.count = count;
-        this.columna = columna;
         this.offSetX = offSetX;
-        this.offSetY = offSetY;
-        this.height = height;
-        this.width = width;
         
         setCycleDuration(duration);
         setCycleCount(Animation.INDEFINITE);
         setInterpolator(Interpolator.LINEAR);
-        this.imageView.setViewport(new Rectangle2D(offSetX, offSetY, width, height));
+        this.imageView.setViewport(new Rectangle2D(offSetX, offSetY, this.width, this.height));
     }
-
+    
+    /**
+     * 
+     * @param offSetX Set de la variable offSetX
+     */
     public void setOffSetX(int offSetX) {
         this.offSetX = offSetX;
     }
-
-    public void setOffSetY(int offSetY) {
-        this.offSetY = offSetY;
-    }
     
+    /**
+     * Estas tu que voy a explicar este metodo si alguien esta leyendo esto buena suerte
+     * @param frac 
+     */
    @Override
     protected void interpolate(double frac) {
         final int index = Math.min((int) Math.floor(count * frac), count - 1);
