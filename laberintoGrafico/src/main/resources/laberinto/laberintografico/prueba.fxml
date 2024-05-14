@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="laberinto.laberintografico.PruebaController">
+   <children>
+      <ImageView fx:id="foto" fitHeight="35.0" fitWidth="27.0" layoutX="273.0" layoutY="183.0" onMouseClicked="#animacion" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../assets/oeste/andaroeste_0.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
