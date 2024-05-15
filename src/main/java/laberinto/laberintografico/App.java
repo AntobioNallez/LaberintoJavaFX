@@ -21,7 +21,7 @@ import javafx.util.Duration;
 public class App extends Application {
 
     private static final ImageView imageView = new ImageView("/assets/spriteAnimacion2.png");
-    private boolean cinematica = false;
+    private boolean cinematica, specialist = false;
     private boolean accionesReservadas = false;
     private SpriteAnimation animacionCinematica;
     private Movimiento movimiento;
@@ -51,24 +51,32 @@ public class App extends Application {
                     }
                     case "W" -> {
                         movimiento.moverArriba();
-                        animacionCinematica.setOffSetX(66);
+                        if (!specialist) {
+                            animacionCinematica.setOffSetX(66);
+                        }
                     }
                     case "A" -> {
                         movimiento.moverIzquierda();
-                        animacionCinematica.setOffSetX(192);
+                        if (!specialist) {
+                            animacionCinematica.setOffSetX(192);
+                        }
                     }
                     case "S" -> {
                         movimiento.moverAbajo();
-                        animacionCinematica.setOffSetX(2);
+                        if (!specialist) {
+                            animacionCinematica.setOffSetX(2);
+                        }
                     }
                     case "D" -> {
                         movimiento.moverDerecha();
-                        animacionCinematica.setOffSetX(130);
+                        if (!specialist) {
+                            animacionCinematica.setOffSetX(130);
+                        }
                     }
                 }
                 animacionCinematica.play();
                 cinematica = true;
-                cinematicaTimeline = new Timeline(new KeyFrame(Duration.seconds(5), e -> {
+                cinematicaTimeline = new Timeline(new KeyFrame(Duration.seconds(4.5), e -> {
                     cinematica = false;
                 }));
                 cinematicaTimeline.play();
@@ -87,7 +95,11 @@ public class App extends Application {
     private void teclaEspecial() {
         System.out.println("Elige cual de las mecanicas ocultas quieres activar");
         accionesReservadas = true;
-        VentanaEspecial ventana = new VentanaEspecial(animacionCinematica);
+        VentanaEspecial ventana = new VentanaEspecial(animacionCinematica, this);
         ventana.show();
+    }
+    
+    public void setSpecialist() {
+        specialist = true;
     }
 }

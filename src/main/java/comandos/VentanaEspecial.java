@@ -9,20 +9,22 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import laberinto.laberintografico.App;
 
 /**
  *
  * @author Antonio
  */
 public class VentanaEspecial extends Stage {
-
-    public VentanaEspecial(SpriteAnimation animacion) {
+    
+    public VentanaEspecial(SpriteAnimation animacion, App app) {
         setTitle("Acciones Especiales");
 
         Button btnAccion1 = new Button("Dance");
 
-        btnAccion1.setOnAction(e -> {
+        btnAccion1.setOnAction((var e) -> {
             actualizarAnimacion(animacion);
+            app.setSpecialist();
             close();
         });
 
