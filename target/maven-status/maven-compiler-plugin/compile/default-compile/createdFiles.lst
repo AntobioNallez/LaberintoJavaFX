@@ -1,4 +1,5 @@
-laberinto\laberintografico\App$1.class
 laberinto\laberintografico\App.class
 module-info.class
+comandos\Movimiento.class
 comandos\SpriteAnimation.class
+comandos\VentanaEspecial.class

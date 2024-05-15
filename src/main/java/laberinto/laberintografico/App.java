@@ -1,56 +1,105 @@
 package laberinto.laberintografico;
 
+import comandos.Movimiento;
 import comandos.SpriteAnimation;
+import comandos.VentanaEspecial;
+import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
  * JavaFX App
+ *
+ * @version 0.0.2
  */
 public class App extends Application {
 
-    private ImageView imageView;
-    private int currentImageIndex = 0;
-    private Image[] images = new Image[4];
-    private Timeline timeline;
-    private boolean keyEnabled = true;
+    private static final ImageView imageView = new ImageView("/assets/spriteAnimacion2.png");
+    private boolean cinematica, specialist = false;
+    private boolean accionesReservadas = false;
+    private SpriteAnimation animacionCinematica;
+    private Movimiento movimiento;
+    private String tecla;
+    private Timeline cinematicaTimeline;
 
     @Override
     public void start(Stage primaryStage) {
         StackPane root = new StackPane();
-        imageView = new ImageView("/assets/spriteAnimacion.png");
         root.getChildren().add(imageView);
         Scene scene = new Scene(root, 600, 400);
-        
-        Duration duration = Duration.seconds(0.5);
-        
-        int offSetX = 2;
+        movimiento = new Movimiento(imageView);
 
-        SpriteAnimation animation = new SpriteAnimation(imageView, offSetX, duration);
-        
-        scene.setOnKeyPressed((var event) -> { //Lo de var me lo recomendo netbeans ni idea de que es pero funciona asi que
-            if (null != event.getCode()) switch (event.getCode()) {
-                case S -> animation.setOffSetX(2);
-                case W -> animation.setOffSetX(66);
-                case D -> animation.setOffSetX(130);
-                case A -> animation.setOffSetX(194);
+        animacionCinematica = new SpriteAnimation(imageView, 10, 2, 2, 3, 38, 32, Duration.seconds(0.8));
+
+        scene.setOnKeyPressed((var event) -> {
+            if (!cinematica) {
+                tecla = event.getCode().toString();
+                switch (tecla) {
+                    case "CONTROL" -> {
+                        if (!accionesReservadas) {
+                            teclaEspecial();
+                        } else {
+                            System.out.println("Ya has activado una acción especial esta limitada a una por partida");
+                        }
+                        return;
+                    }
+                    case "W" -> {
+                        movimiento.moverArriba();
+                        if (!specialist) {
+                            animacionCinematica.setOffSetX(66);
+                        }
+                    }
+                    case "A" -> {
+                        movimiento.moverIzquierda();
+                        if (!specialist) {
+                            animacionCinematica.setOffSetX(192);
+                        }
+                    }
+                    case "S" -> {
+                        movimiento.moverAbajo();
+                        if (!specialist) {
+                            animacionCinematica.setOffSetX(2);
+                        }
+                    }
+                    case "D" -> {
+                        movimiento.moverDerecha();
+                        if (!specialist) {
+                            animacionCinematica.setOffSetX(130);
+                        }
+                    }
+                }
+                animacionCinematica.play();
+                cinematica = true;
+                cinematicaTimeline = new Timeline(new KeyFrame(Duration.seconds(4.5), e -> {
+                    cinematica = false;
+                }));
+                cinematicaTimeline.play();
             }
-            animation.play();
-        });
+        }
+        );
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    
+
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void teclaEspecial() {
+        System.out.println("Elige cual de las mecanicas ocultas quieres activar");
+        accionesReservadas = true;
+        VentanaEspecial ventana = new VentanaEspecial(animacionCinematica, this);
+        ventana.show();
+    }
+    
+    public void setSpecialist() {
+        specialist = true;
     }
 }
