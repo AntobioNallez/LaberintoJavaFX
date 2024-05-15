@@ -1,15 +1,12 @@
 package laberinto.laberintografico;
 
-import comandos.Movimiento;
-import comandos.SpriteAnimation;
-import comandos.VentanaEspecial;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import comandos.*;
+import javafx.animation.*;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
+import javafx.scene.*;
+import javafx.scene.image.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -27,16 +24,13 @@ public class App extends Application {
     private Movimiento movimiento;
     private String tecla;
     private Timeline cinematicaTimeline;
+    private StackPane root;
+    private Scene scene;
 
     @Override
     public void start(Stage primaryStage) {
-        StackPane root = new StackPane();
-        root.getChildren().add(imageView);
-        Scene scene = new Scene(root, 600, 400);
-        movimiento = new Movimiento(imageView);
-
-        animacionCinematica = new SpriteAnimation(imageView, 10, 2, 2, 3, 38, 32, Duration.seconds(0.8));
-
+        setup();
+        
         scene.setOnKeyPressed((var event) -> {
             if (!cinematica) {
                 tecla = event.getCode().toString();
@@ -87,11 +81,7 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
+    
     private void teclaEspecial() {
         System.out.println("Elige cual de las mecanicas ocultas quieres activar");
         accionesReservadas = true;
@@ -102,4 +92,24 @@ public class App extends Application {
     public void setSpecialist() {
         specialist = true;
     }
+    
+    private void setup() {
+        root = new StackPane();
+        scene = new Scene(root, 600, 400);
+        movimiento = new Movimiento(imageView);
+        Image imagenDeFondo = new Image("assets/0fx_hallway.png");
+        ImageView imagenFondo = new ImageView("assets/0fx_hallway.png");
+        imagenFondo.setFitWidth(600);
+        imagenFondo.setFitHeight(400);
+        BackgroundImage fondo = new BackgroundImage(imagenDeFondo, BackgroundRepeat.SPACE, BackgroundRepeat.SPACE, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+        Background background = new Background(fondo);
+        root.setBackground(background);
+        root.getChildren().addAll(imagenFondo, imageView);
+        animacionCinematica = new SpriteAnimation(imageView, 10, 2, 2, 3, 38, 32, Duration.seconds(0.8));
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
 }

@@ -19,28 +19,40 @@ public class Movimiento {
     public Movimiento(ImageView imageView) {
         this.imageView = imageView;
     }
-
+    
+    /**
+     * Metodo que hacer que el personaje se mueva hacia arriba
+     */
     public void moverArriba() {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
         transition.setByY(-150);
         transition.play();
     }
     
+    /**
+     * Metodo que hacer que el personaje se mueva hacia abajo
+     */
     public void moverAbajo() {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
         transition.setByY(150);
         transition.play();
     }
     
+    /**
+     * Metodo que hacer que el personaje se mueva hacia la izquierda
+     */
     public void moverIzquierda() {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
-        transition.setByX(-200); // Mover hacia la izquierda
+        transition.setByX(-245); // Mover hacia la izquierda
         transition.play();
     }
     
+    /**
+     * Metodo que hacer que el personaje se mueva hacia la derecha
+     */
     public void moverDerecha() {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
-        transition.setByX(200);
+        transition.setByX(245);
         transition.play();
     }
     

@@ -37,6 +37,6 @@ public class VentanaEspecial extends Stage {
     }
 
     private void actualizarAnimacion(SpriteAnimation animacion) {
-        animacion.setWidth(448, 23, 0, 237, 47, 56, Duration.seconds(10));
+        animacion.overrideParameters(448, 23, 0, 237, 47, 56, Duration.seconds(10));
     }
 }
