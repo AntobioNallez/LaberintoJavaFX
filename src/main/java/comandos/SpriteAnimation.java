@@ -16,7 +16,7 @@ import javafx.util.Duration;
  */
 public class SpriteAnimation extends Transition {
     
-   //Valores para ir hacia abajo (10,2,2,3,38,32), hacia arriba(10,2,66,3,38,32), hacia la derecha(10,2,130,3,38,32),hacia la izquierda(10,2,196,3,38,32);
+   //Valores para ir hacia abajo (10,2,2,3,38,32), hacia arriba(10,2,66,3,38,32), hacia la derecha(10,2,130,3,38,32),hacia la izquierda(10,2,192,3,38,32);
    //Estos valores son funcionales para la foto que yo he puesto otra foto habria que ajustarlos o cambiar la foto;
    private final ImageView imageView;
    private int count; //Frames totales

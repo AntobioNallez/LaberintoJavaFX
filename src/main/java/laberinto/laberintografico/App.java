@@ -1,7 +1,10 @@
 package laberinto.laberintografico;
 
+import comandos.Movimiento;
 import comandos.SpriteAnimation;
-import javafx.animation.TranslateTransition;
+import comandos.VentanaEspecial;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.scene.Scene;
@@ -12,106 +15,79 @@ import javafx.util.Duration;
 
 /**
  * JavaFX App
- * 
+ *
  * @version 0.0.2
  */
 public class App extends Application {
 
-    private ImageView imageView;
+    private static final ImageView imageView = new ImageView("/assets/spriteAnimacion2.png");
     private boolean cinematica = false;
     private boolean accionesReservadas = false;
     private SpriteAnimation animacionCinematica;
-    private boolean specialist = false;
+    private Movimiento movimiento;
     private String tecla;
+    private Timeline cinematicaTimeline;
 
     @Override
     public void start(Stage primaryStage) {
         StackPane root = new StackPane();
-        imageView = new ImageView("/assets/spriteAnimacion2.png");
         root.getChildren().add(imageView);
         Scene scene = new Scene(root, 600, 400);
+        movimiento = new Movimiento(imageView);
 
         animacionCinematica = new SpriteAnimation(imageView, 10, 2, 2, 3, 38, 32, Duration.seconds(0.8));
-        animacionCinematica.setOnFinished(event -> cinematica = false);
 
         scene.setOnKeyPressed((var event) -> {
-            tecla = event.getCode().toString();
-            if (tecla.equals("CONTROL") && !cinematica) {
-                System.out.println("""
-                                   Comandos especiales activados. 
-                                   Para desactivar esta funcionalidad pulsa Control nuevamente.
-                                   Aviso: si se utiliza uno de estos comandos, no se podrá desactivar su función
-                                   hasta que se reinicie el juego. 
-                                   Pulsar Control una segunda vez solo hace que, por ejemplo, si pulsas la tecla A,
-                                   haga el comando de movimiento y no uno especial. Cuando se ejecute un comando
-                                   especial se desactivaran los comandos especiales hasta que vuelvas a activarlos
-                                   y no se podra desactivar el comando que hayas activado.""");
-                accionesReservadas = true;
-                return;
-            }
-
-            if (accionesReservadas) {
-                switch (tecla) {
-                    case "A" -> {
-                        if (!specialist) {
-                            animacionCinematica.setWidth(449, 23, 0, 196, 47, 56, Duration.seconds(2));
-                            animacionCinematica.play();
-                        } else {
-                            System.out.println("Ya esta en funcionamiento");
-                        }
-                    }
-                    default ->
-                        System.out.println("Acción reservada no encontrada para esta tecla.");
-                }
-                accionesReservadas = false;
-                return;
-            }
-
             if (!cinematica) {
-                cinematica = true;
+                tecla = event.getCode().toString();
                 switch (tecla) {
-                    case "S" -> {
-                        moverImageViewGradualmente(0, 180);
-                        animacionCinematica.setOffSetX(2);
+                    case "CONTROL" -> {
+                        if (!accionesReservadas) {
+                            teclaEspecial();
+                        } else {
+                            System.out.println("Ya has activado una acción especial esta limitada a una por partida");
+                        }
+                        return;
                     }
                     case "W" -> {
-                        moverImageViewGradualmente(0, -180);
+                        movimiento.moverArriba();
                         animacionCinematica.setOffSetX(66);
                     }
+                    case "A" -> {
+                        movimiento.moverIzquierda();
+                        animacionCinematica.setOffSetX(192);
+                    }
+                    case "S" -> {
+                        movimiento.moverAbajo();
+                        animacionCinematica.setOffSetX(2);
+                    }
                     case "D" -> {
-                        moverImageViewGradualmente(280, 0);
+                        movimiento.moverDerecha();
                         animacionCinematica.setOffSetX(130);
                     }
-                    case "A" -> {
-                        moverImageViewGradualmente(-280, 0);
-                        animacionCinematica.setOffSetX(194);
-                    }
                 }
+                animacionCinematica.play();
+                cinematica = true;
+                cinematicaTimeline = new Timeline(new KeyFrame(Duration.seconds(5), e -> {
+                    cinematica = false;
+                }));
+                cinematicaTimeline.play();
             }
-            animacionCinematica.play();
         }
         );
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
-    
-    private void moverImageViewGradualmente(double moveX, double moveY) { //Se rompe si hago specialist dance aún tengo que averiguar porque
-        double posXInicial = imageView.getTranslateX();
-        double posYInicial = imageView.getTranslateY();
-
-        double posXFinal = posXInicial + moveX;
-        double posYFinal = posYInicial + moveY;
-
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(4), imageView);
-        
-        transition.setToX(posXFinal);
-        transition.setToY(posYFinal);
-
-        transition.play();
-    }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private void teclaEspecial() {
+        System.out.println("Elige cual de las mecanicas ocultas quieres activar");
+        accionesReservadas = true;
+        VentanaEspecial ventana = new VentanaEspecial(animacionCinematica);
+        ventana.show();
     }
 }
