@@ -24,20 +24,17 @@ public class App extends Application {
     private String tecla;
     private int fondo = 1;
     private Timeline cinematicaTimeline;
-    private static final ImageView bossFinal = new ImageView("assets/260px-Salamence.png");
 
     @Override
     public void start(Stage primaryStage) {
         Juego j = new Juego();
         StackPane root = new StackPane();
         root.getChildren().add(imageView);
-        root.getChildren().add(bossFinal); // Añadimos bossFinal al root
         Scene scene = new Scene(root, 600, 400);
         movimiento = new Movimiento(imageView);
         Image img = new Image("assets/sala" + fondo + ".png");
         Background bc = new Background(new BackgroundImage(img, BackgroundRepeat.SPACE, BackgroundRepeat.SPACE, BackgroundPosition.CENTER, null));
         root.setBackground(bc);
-        bossFinal.setVisible(false); // Inicialmente ocultamos bossFinal
 
         animacionCinematica = new SpriteAnimation(imageView, 10, 2, 2, 3, 38, 32, Duration.seconds(0.8));
 
@@ -141,13 +138,11 @@ public class App extends Application {
     private void iniciarCombate(Stage primaryStage) {
         Platform.runLater(() -> {
             primaryStage.close();
-
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/laberintografico/Combate.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("Combate.fxml"));
                 StackPane combateRoot = loader.load();
 
                 Scene combateScene = new Scene(combateRoot, 800, 600);
-
                 Stage combateStage = new Stage();
                 combateStage.setScene(combateScene);
                 combateStage.setTitle("Combate Final");

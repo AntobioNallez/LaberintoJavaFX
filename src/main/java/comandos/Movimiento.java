@@ -47,7 +47,7 @@ public class Movimiento {
      * Metodo que hacer que el personaje se mueva hacia la izquierda
      */
     public void moverIzquierda() {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
+        TranslateTransition transition = new TranslateTransition(duration, imageView);
         transition.setByX(-245); // Mover hacia la izquierda
         transition.play();
     }
@@ -56,7 +56,7 @@ public class Movimiento {
      * Metodo que hacer que el personaje se mueva hacia la derecha
      */
     public void moverDerecha() {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
+        TranslateTransition transition = new TranslateTransition(duration, imageView);
         transition.setByX(245);
         transition.play();
     }
