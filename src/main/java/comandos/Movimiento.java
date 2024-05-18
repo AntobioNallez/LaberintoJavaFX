@@ -15,32 +15,49 @@ import javafx.util.Duration;
 public class Movimiento {
 
     private final ImageView imageView;
+    private Duration duration = Duration.seconds(3.8);
 
     public Movimiento(ImageView imageView) {
         this.imageView = imageView;
     }
+    
+    /**
+     * Metodo que hacer que el personaje se mueva hacia arriba
+     */
+    public void setDuration(Duration duration2){
+        this.duration = duration2;
+    }
 
     public void moverArriba() {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
+        TranslateTransition transition = new TranslateTransition(duration, imageView);
         transition.setByY(-150);
         transition.play();
     }
     
+    /**
+     * Metodo que hacer que el personaje se mueva hacia abajo
+     */
     public void moverAbajo() {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
+        TranslateTransition transition = new TranslateTransition(duration, imageView);
         transition.setByY(150);
         transition.play();
     }
     
+    /**
+     * Metodo que hacer que el personaje se mueva hacia la izquierda
+     */
     public void moverIzquierda() {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
-        transition.setByX(-200); // Mover hacia la izquierda
+        TranslateTransition transition = new TranslateTransition(duration, imageView);
+        transition.setByX(-245); // Mover hacia la izquierda
         transition.play();
     }
     
+    /**
+     * Metodo que hacer que el personaje se mueva hacia la derecha
+     */
     public void moverDerecha() {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(3.8), imageView);
-        transition.setByX(200);
+        TranslateTransition transition = new TranslateTransition(duration, imageView);
+        transition.setByX(245);
         transition.play();
     }
     

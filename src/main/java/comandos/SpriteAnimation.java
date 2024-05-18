@@ -28,6 +28,7 @@ public class SpriteAnimation extends Transition {
    private Duration duration;
    
    /**
+    * Constructor de la clase SpriteAnimation
     * 
     * @param imageView Foto que contiene los frames de la animación
     * @param offSetX Distancia desde el inicio de la imagen hasta el primer pixel en el eje X
@@ -48,8 +49,19 @@ public class SpriteAnimation extends Transition {
         setInterpolator(Interpolator.LINEAR);
         this.imageView.setViewport(new Rectangle2D(offSetX, offSetY, this.width, this.height));
     }
-
-    public void setWidth(int count, int columna, int offSetX, int offSetY, int height, int width, Duration duration) {
+    
+    /**
+     * Metodo que sirve para alterar todos los parametros en una animación en caso que los frames de la animación esten en la misma imagen
+     * 
+     * @param count
+     * @param columna
+     * @param offSetX
+     * @param offSetY
+     * @param height
+     * @param width
+     * @param duration 
+     */
+    public void overrideParameters(int count, int columna, int offSetX, int offSetY, int height, int width, Duration duration) {
         this.count = count;
         this.columna = columna;
         this.offSetX = offSetX;
@@ -63,12 +75,19 @@ public class SpriteAnimation extends Transition {
         setInterpolator(Interpolator.LINEAR);
         this.imageView.setViewport(new Rectangle2D(offSetX, offSetY, this.width, this.height));
     }
-
+    
+    /**
+     * Setter del parametro offSetX
+     * 
+     * @param offSetX 
+     */
     public void setOffSetX(int offSetX) {
         this.offSetX = offSetX;
     }
     
     /**
+     * Metodo que utiliza un interpolador lineal para la transición entre los frames de la animación.
+     * El método interpolate() se sobrescribe para actualizar la vista del ImageView en cada iteración de la animación.
      * 
      * @param frac 
      */
