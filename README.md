@@ -9,3 +9,6 @@ Esto es una trabajo de clase así que tampoco hay gran cosa.
 
 ## **Progreso:**
 Por ahora, se ha completado la animación de sprites. Se están trabajando en nuevas funcionalidades y mejoras para hacer que el juego sea funcional.
+
+
+POSDATA: Si hay algun error es probable que algo se haya corrompido cuando lo subi a github hizo conflicto con los archivos ya existentes y algunas cosas se perdieron.

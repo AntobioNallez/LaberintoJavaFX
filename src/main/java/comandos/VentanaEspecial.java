@@ -17,6 +17,12 @@ import laberinto.laberintografico.App;
  */
 public class VentanaEspecial extends Stage {
     
+    /**
+     * Creacion de la ventana especial con las acciones especiales, no tuve tiempo de implementar más
+     * 
+     * @param animacion
+     * @param app 
+     */
     public VentanaEspecial(SpriteAnimation animacion, App app) {
         setTitle("Acciones Especiales");
 
