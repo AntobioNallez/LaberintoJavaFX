@@ -11,7 +11,8 @@ public final class Juego {
 
     private Habitacion habitacionActual;
     private Habitacion habitacionInicial;
-    private String item;
+    private Habitacion habitacionAnterior;
+    public Habitacion habNuevaProbando;
 
     public Juego() {
         crearHabitaciones();
@@ -65,6 +66,8 @@ public final class Juego {
             case "D" -> direccion = "este";
             default -> {return false;}
         }
+        
+        habNuevaProbando = habitacionActual.getSalida(direccion);
 
         return habitacionActual.getSalida(direccion) != null;
     }
@@ -76,7 +79,7 @@ public final class Juego {
             case "S" -> direccion = "sur";
             case "D" -> direccion = "este";
         }
-        
+        habitacionAnterior = habitacionActual;
         Habitacion nuevaHabitacion = habitacionActual.getSalida(direccion);
         
         if (nuevaHabitacion != null) {
@@ -88,7 +91,6 @@ public final class Juego {
 
     public void buscarEnHabitacionEspecial() {
         if (habitacionActual.getDescripcion().equals("4") && !objetoClave) {
-            item = "Xerneas";
             objetoClave = true;
         } else {
             System.out.println("No hay nada especial en esta habitación.");
@@ -97,5 +99,9 @@ public final class Juego {
 
     public String getDescripcion() {
         return habitacionActual.getDescripcion();
+    }
+    
+    public void retroceder() {
+        habitacionActual = habitacionAnterior;
     }
 }

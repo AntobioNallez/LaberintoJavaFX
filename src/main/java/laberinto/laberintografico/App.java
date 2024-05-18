@@ -1,10 +1,8 @@
 package laberinto.laberintografico;
 
 import comandos.*;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.application.Platform;
+import javafx.animation.*;
+import javafx.application.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -18,7 +16,7 @@ public class App extends Application {
 
     private static final ImageView imageView = new ImageView("/assets/spriteAnimacion2.png");
     private boolean cinematica = false, specialist = false;
-    private boolean accionesReservadas = false;
+    private boolean accionesReservadas = false, combate;
     private SpriteAnimation animacionCinematica;
     private Movimiento movimiento;
     private String tecla;
@@ -108,10 +106,14 @@ public class App extends Application {
 
                         movimiento.setDuration(Duration.millis(1));
                         switch (tecla) {
-                            case "W" -> movimiento.moverAbajo();
-                            case "A" -> movimiento.moverDerecha();
-                            case "D" -> movimiento.moverIzquierda();
-                            case "S" -> movimiento.moverArriba();
+                            case "W" ->
+                                movimiento.moverAbajo();
+                            case "A" ->
+                                movimiento.moverDerecha();
+                            case "D" ->
+                                movimiento.moverIzquierda();
+                            case "S" ->
+                                movimiento.moverArriba();
                         }
                         cinematica = false;
                     }));
@@ -140,14 +142,14 @@ public class App extends Application {
             primaryStage.close();
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("Combate.fxml"));
-                StackPane combateRoot = loader.load();
-
+                AnchorPane combateRoot = loader.load();
                 Scene combateScene = new Scene(combateRoot, 800, 600);
                 Stage combateStage = new Stage();
                 combateStage.setScene(combateScene);
                 combateStage.setTitle("Combate Final");
                 combateStage.show();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         });
     }
 
