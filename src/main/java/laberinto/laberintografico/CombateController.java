@@ -4,7 +4,6 @@
  */
 package laberinto.laberintografico;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -31,35 +30,34 @@ public class CombateController {
     private ProgressBar barraXerneas;
 
     @FXML
-    void ataque(ActionEvent event) {
-        ataque = !ataque;
+    void huirPorPatas(ActionEvent event) {
         if (ataque) {
-            huir.setText("Fuerza Lunar");
-            atack.setText("Megacuerno");
-            barraJefe.setProgress(barraJefe.getProgress() - 0.1);
-            barraXerneas.setProgress(barraXerneas.getProgress() - 0.2);
-        } else {
+            barraJefe.setProgress(barraJefe.getProgress() - 0.2);
+            barraXerneas.setProgress(barraXerneas.getProgress() - 0.1);
+            ataque = false;
             huir.setText("Huir");
             atack.setText("Atacar");
+        } else {
+            App.mostrarMensajeFinal("Huiste del combate. Final 4 Salir por patas");
         }
-        if (barraJefe.getProgress() <= 0) {
-            Platform.runLater(() -> {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Fin del Juego");
-                alert.setHeaderText(null);
-                alert.setContentText("GG");
-                alert.showAndWait();
-                System.exit(0);
-            });
-        } else if (barraXerneas.getProgress() <= 0) {
-            Platform.runLater(() -> {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Fin del Juego");
-                alert.setHeaderText(null);
-                alert.setContentText("Oh no perdiste el combate");
-                alert.showAndWait();
-                System.exit(0);
-            });
+    }
+
+    @FXML
+    void ataque(ActionEvent event) {
+        if (!ataque) {
+            ataque = true;
+            huir.setText("Fuerza Lunar");
+            atack.setText("Megacuerno");
+            return;
+        }
+        if (ataque) {
+            barraJefe.setProgress(barraJefe.getProgress() - 0.1);
+            if (barraJefe.getProgress() <= 0) App.mostrarMensajeFinal("GG");
+            barraXerneas.setProgress(barraXerneas.getProgress() - 0.2);
+            if (barraXerneas.getProgress() <= 0) App.mostrarMensajeFinal("Oh no perdiste el combate");
+            huir.setText("Huir");
+            atack.setText("Atacar");
+            ataque = false;
         }
     }
 }

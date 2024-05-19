@@ -15,17 +15,15 @@ import javafx.util.Duration;
  * @author Antonio
  */
 public class SpriteAnimation extends Transition {
-    
-   //Valores para ir hacia abajo (10,2,2,3,38,32), hacia arriba(10,2,66,3,38,32), hacia la derecha(10,2,130,3,38,32),hacia la izquierda(10,2,192,3,38,32);
-   //Estos valores son funcionales para la foto que yo he puesto otra foto habria que ajustarlos o cambiar la foto;
+
    private final ImageView imageView;
    private int count; //Frames totales
-   private int columna; //Columnas, va de izquierda a derecha y de arriba a abajo
-   private int offSetX; 
-   private int offSetY; //Distancia desde el inicio de la imagen hasta el primer pixel en el eje Y
-   private int height; //Altura de los frames
-   private int width; //Anchura de los frames
-   private Duration duration;
+   private int columna; //Número de columnas a revisar
+   private int offSetX; //Distancia hasta el primer pixel en el eje X
+   private int offSetY; //Distancia hasta el primer pixel en el eje Y
+   private int height; //Altura del frame
+   private int width; //Anchura del frame
+   private Duration duration; //Duración de la animación
    
    /**
     * Constructor de la clase SpriteAnimation
@@ -53,13 +51,13 @@ public class SpriteAnimation extends Transition {
     /**
      * Metodo que sirve para alterar todos los parametros en una animación en caso que los frames de la animación esten en la misma imagen
      * 
-     * @param count
-     * @param columna
-     * @param offSetX
-     * @param offSetY
-     * @param height
-     * @param width
-     * @param duration 
+     * @param count Número total de frames que tiene la animación
+     * @param columna Columnas que revisar de la imagen
+     * @param offSetX Distancia hasta el primer pixel desde el eje X
+     * @param offSetY Distancia hasta el primer pixel desde el eje Y
+     * @param height Altura del frame
+     * @param width Anchura del frame
+     * @param duration Duración de toda la animación
      */
     public void overrideParameters(int count, int columna, int offSetX, int offSetY, int height, int width, Duration duration) {
         this.count = count;
