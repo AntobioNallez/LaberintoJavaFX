@@ -1,9 +1,8 @@
 package laberinto.laberintografico;
 
-
 /**
  *
- * @author Diurno
+ * @author Antonio
  */
 public final class Juego {
 
@@ -53,10 +52,10 @@ public final class Juego {
     }
 
     public boolean direccionValida(String direccion) {
-        if (direccion.equals("CONTROL")) {
-            return true;
-        } else if (direccion.equals("B")) {
-            return true;
+        switch (direccion) {
+            case "CONTROL" -> {return true;}
+            case "B" -> {return true;}
+            case "I" -> {return true;}
         }
  
         switch (direccion.toUpperCase()) {
