@@ -16,7 +16,7 @@ import javafx.scene.shape.Rectangle;
 
 /**
  * @version 0.4
- * 
+ *
  * @author Antonio
  */
 
@@ -62,8 +62,8 @@ public class App extends Application {
          * Control de teclas presionadas y su uso
          */
         scene.setOnKeyPressed((var event) -> {
-            tecla = event.getCode().toString();
             if (!cinematica && oscurecido) {
+                tecla = event.getCode().toString();
                 if (j.direccionValida(tecla)) {
                     switch (tecla) {
                         case "B" -> {
@@ -147,7 +147,12 @@ public class App extends Application {
                     }));
                     cinematicaTimeline.play();
                 }
-            } else if (!cinematica && !oscurecido && tecla.equals("I")) ocultarOscuridad();
+            } else if (!cinematica && !oscurecido) {
+                tecla = event.getCode().toString();
+                if (tecla.equals("I")) {
+                    ocultarOscuridad();
+                }
+            }
         });
 
         primaryStage.setScene(scene);

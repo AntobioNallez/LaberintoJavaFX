@@ -1,4 +1,5 @@
 laberinto\laberintografico\Juego.class
+laberinto\laberintografico\Ayudante.class
 laberinto\laberintografico\Habitacion.class
 module-info.class
 comandos\Movimiento.class

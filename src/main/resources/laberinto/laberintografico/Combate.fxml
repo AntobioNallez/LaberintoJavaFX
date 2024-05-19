@@ -25,8 +25,8 @@
          </image>
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#689e9e" height="130.0" layoutX="16.0" layoutY="256.0" stroke="BLACK" strokeType="INSIDE" width="270.0" />
-      <Label layoutX="46.0" layoutY="305.0" prefHeight="32.0" prefWidth="235.0" text="Ha aparecido un Dragonite salvaje." />
       <ProgressBar fx:id="barraXerneas" layoutX="37.0" layoutY="227.0" prefWidth="200.0" progress="1.0" />
       <ProgressBar fx:id="barraJefe" layoutX="370.0" layoutY="227.0" prefWidth="200.0" progress="1.0" />
+      <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="260.0" prefHeight="122.0" prefWidth="270.0" stylesheets="@../../styles/combate.css" text="Un dragonite salvaje&#10;a aparecido" textAlignment="CENTER" />
    </children>
 </AnchorPane>
