@@ -16,35 +16,40 @@ import javafx.util.Duration;
 public class SpriteAnimation extends Transition {
 
    private final ImageView imageView;
-   private int count; //Frames totales
-   private int columna; //Número de columnas a revisar
-   private int offSetX; //Distancia hasta el primer pixel en el eje X
-   private int offSetY; //Distancia hasta el primer pixel en el eje Y
-   private int height; //Altura del frame
-   private int width; //Anchura del frame
-   private Duration duration; //Duración de la animación
+   private int count;
+   private int columna;
+   private int offSetX;
+   private int offSetY;
+   private int altura;
+   private int anchura;
+   private Duration duration;
    
    /**
     * Constructor de la clase SpriteAnimation
     * 
     * @param imageView Foto que contiene los frames de la animación
+    * @param count Frames totales de la animacion
+    * @param columna Numero de columnas a revisar
     * @param offSetX Distancia desde el inicio de la imagen hasta el primer pixel en el eje X
-    * @param duration Duración de la animación
+    * @param offSetY Distancia desde el inicio de la imagen hasta el primer pixel en el eje Y
+    * @param altura Altura del frame
+    * @param anchura Anchura del frame
+    * @param duration Duración total de la animación
     */
-    public SpriteAnimation(ImageView imageView, int count, int columna, int offSetX, int offSetY, int height, int width, Duration duration) {
+    public SpriteAnimation(ImageView imageView, int count, int columna, int offSetX, int offSetY, int altura, int anchura, Duration duration) {
         this.imageView = imageView;
         this.count = count;
         this.columna = columna;
         this.offSetX = offSetX;
         this.offSetY = offSetY;
-        this.height = height;
-        this.width = width;
+        this.altura = altura;
+        this.anchura = anchura;
         this.duration = duration;
         
         setCycleDuration(this.duration);
         setCycleCount(5);
         setInterpolator(Interpolator.LINEAR);
-        this.imageView.setViewport(new Rectangle2D(offSetX, offSetY, this.width, this.height));
+        this.imageView.setViewport(new Rectangle2D(offSetX, offSetY, this.anchura, this.altura));
     }
     
     /**
@@ -54,23 +59,23 @@ public class SpriteAnimation extends Transition {
      * @param columna Columnas que revisar de la imagen
      * @param offSetX Distancia hasta el primer pixel desde el eje X
      * @param offSetY Distancia hasta el primer pixel desde el eje Y
-     * @param height Altura del frame
-     * @param width Anchura del frame
+     * @param altura Altura del frame
+     * @param anchura Anchura del frame
      * @param duration Duración de toda la animación
      */
-    public void overrideParameters(int count, int columna, int offSetX, int offSetY, int height, int width, Duration duration) {
+    public void overrideParameters(int count, int columna, int offSetX, int offSetY, int altura, int anchura, Duration duration) {
         this.count = count;
         this.columna = columna;
         this.offSetX = offSetX;
         this.offSetY = offSetY;
-        this.height = height;
-        this.width = width;
+        this.altura = altura;
+        this.anchura = anchura;
         this.duration = duration;
         
         setCycleDuration(this.duration);
         setCycleCount(INDEFINITE);
         setInterpolator(Interpolator.LINEAR);
-        this.imageView.setViewport(new Rectangle2D(offSetX, offSetY, this.width, this.height));
+        this.imageView.setViewport(new Rectangle2D(offSetX, offSetY, this.anchura, this.altura));
     }
     
     /**
@@ -91,9 +96,9 @@ public class SpriteAnimation extends Transition {
    @Override
     protected void interpolate(double frac) {
         final int index = Math.min((int) Math.floor(count * frac), count - 1);
-        final int x = (index % columna) * width + offSetX;
-        final int y = (index / columna) * height + offSetY;
-        imageView.setViewport(new Rectangle2D(x, y, width, height));
+        final int x = (index % columna) * anchura + offSetX;
+        final int y = (index / columna) * altura + offSetY;
+        imageView.setViewport(new Rectangle2D(x, y, anchura, altura));
     }
     
 }

@@ -65,12 +65,12 @@ public class CombateController {
             label.setText("Has utilizado Megacuerno");
             barraJefe.setProgress(barraJefe.getProgress() - (xerneas.calcularDanio(poderBase) * critico) / 70);
             if (barraJefe.getProgress() <= 0) {
-                App.mostrarMensajeFinal("GG");
+                App.mostrarMensajeFinal("Ganaste el combate felicidades. Final 2");
                 return;
             }
             barraXerneas.setProgress(barraXerneas.getProgress() - (dragonite.calcularDanio(poderBase) * critico2) / 72);
             if (barraXerneas.getProgress() <= 0) {
-                App.mostrarMensajeFinal("Oh no perdiste el combate");
+                App.mostrarMensajeFinal("Oh no perdiste el combate. Final 3");
                 return;
             }
             huir.setText("Huir");

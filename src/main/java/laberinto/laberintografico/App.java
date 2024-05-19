@@ -11,11 +11,12 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.io.IOException;
+import java.util.Random;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- * @version 0.4
+ * @version 0.4.2
  *
  * @author Antonio
  */
@@ -23,7 +24,7 @@ import javafx.scene.shape.Rectangle;
 public class App extends Application {
 
     private static final ImageView imageView = new ImageView("/assets/spriteAnimacion2.png");
-    private boolean cinematica = false, specialist = false, accionesReservadas = false, oscurecido = true;
+    private boolean cinematica = false, specialist = false, accionesReservadas = false, oscurecido = true, keySwap = false;
     private SpriteAnimation animacionCinematica;
     private Movimiento movimiento;
     private String tecla;
@@ -64,6 +65,9 @@ public class App extends Application {
         scene.setOnKeyPressed((var event) -> {
             if (!cinematica && oscurecido) {
                 tecla = event.getCode().toString();
+                if (keySwap) {
+                    cambioTecla(tecla);
+                }
                 if (j.direccionValida(tecla)) {
                     switch (tecla) {
                         case "B" -> {
@@ -230,5 +234,21 @@ public class App extends Application {
      */
     public void setSpecialist() {
         specialist = true;
+    }
+    
+    /**
+     * Metodo que cambia la tecla que le pases por otra diferente
+     * En este caso usada para alterar los controles del personaje
+     * 
+     * @param teclaPresionada 
+     */
+    private void cambioTecla(String teclaPresionada) {
+        Random r = new Random();
+        char nuevaTecla = (char) ((teclaPresionada.charAt(0) - 'a' + r.nextInt()) % 26 + 'a');
+        tecla = String.valueOf(nuevaTecla).toUpperCase();
+    }
+    
+    public void cambiarTeclado() {
+        keySwap = true;
     }
 }

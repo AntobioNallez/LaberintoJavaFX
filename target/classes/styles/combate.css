@@ -1,10 +1,10 @@
 @font-face {
-    font-family: 'Emerald';
-    src: url('../fonts/Prompt/Emerald.ttf');
+    font-family: 'FuentePrueba';
+    src: url('../fonts/FuentePrueba.ttf');
 }
 
 
 .label {
-    -fx-font-family: 'Emerald';
+    -fx-font-family: 'FuentePrueba';
     -fx-font-size: 22;
 }
