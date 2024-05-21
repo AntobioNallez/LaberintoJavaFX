@@ -15,16 +15,7 @@ import javafx.scene.control.*;
  */
 public class CombateController {
 
-    Ayudante dragonite = new Ayudante(100, 134, 95);
-    Ayudante xerneas = new Ayudante(100, 131, 95);
-    int poderBase = 80;
-
     private boolean ataque = false;
-    private double critico = 1;
-    private double critico2 = 1;
-
-    @FXML
-    private Label label;
 
     @FXML
     private Button atack;
@@ -41,12 +32,11 @@ public class CombateController {
     @FXML
     void huirPorPatas(ActionEvent event) {
         if (ataque) {
-            barraJefe.setProgress(barraJefe.getProgress() - (xerneas.calcularDanio(poderBase) * critico) / 75);
-            barraXerneas.setProgress(barraXerneas.getProgress() - (dragonite.calcularDanio(poderBase) * critico2) / 70);
+            barraJefe.setProgress(barraJefe.getProgress() - 0.2);
+            barraXerneas.setProgress(barraXerneas.getProgress() - 0.1);
             ataque = false;
             huir.setText("Huir");
             atack.setText("Atacar");
-            label.setText("Has utilizado Fuerza Lunar");
         } else {
             App.mostrarMensajeFinal("Huiste del combate. Final 4 Salir por patas");
         }
@@ -54,7 +44,6 @@ public class CombateController {
 
     @FXML
     void ataque(ActionEvent event) {
-        calcularCriticos();
         if (!ataque) {
             ataque = true;
             huir.setText("Fuerza Lunar");
@@ -62,33 +51,13 @@ public class CombateController {
             return;
         }
         if (ataque) {
-            label.setText("Has utilizado Megacuerno");
-            barraJefe.setProgress(barraJefe.getProgress() - (xerneas.calcularDanio(poderBase) * critico) / 70);
-            if (barraJefe.getProgress() <= 0) {
-                App.mostrarMensajeFinal("Ganaste el combate felicidades. Final 2");
-                return;
-            }
-            barraXerneas.setProgress(barraXerneas.getProgress() - (dragonite.calcularDanio(poderBase) * critico2) / 72);
-            if (barraXerneas.getProgress() <= 0) {
-                App.mostrarMensajeFinal("Oh no perdiste el combate. Final 3");
-                return;
-            }
+            barraJefe.setProgress(barraJefe.getProgress() - 0.1);
+            if (barraJefe.getProgress() <= 0) App.mostrarMensajeFinal("GG");
+            barraXerneas.setProgress(barraXerneas.getProgress() - 0.2);
+            if (barraXerneas.getProgress() <= 0) App.mostrarMensajeFinal("Oh no perdiste el combate");
             huir.setText("Huir");
             atack.setText("Atacar");
             ataque = false;
-        }
-    }
-
-    private void calcularCriticos() {
-        int prob = (int) (Math.random() * 100);
-        int prob2 = (int) (Math.random() * 100);
-        switch (prob / 85) {
-            case 0 -> critico = 1;
-            case 1 -> critico = 1.5;
-        }
-        switch (prob2 / 85) {
-            case 0 -> critico2 = 1;
-            case 1 -> critico2 = 1.5;
         }
     }
 }

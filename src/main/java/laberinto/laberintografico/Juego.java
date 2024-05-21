@@ -28,6 +28,7 @@ public final class Juego {
         Habitacion habitacionF = new Habitacion("7");
         Habitacion habitacionOscura = new Habitacion("8");
         Habitacion habitacionBoss = new Habitacion("9");
+        Habitacion habitacionArcade = new Habitacion("10");
 
         habitacionInicial.setSalida("sur", habitacionA);
 
@@ -46,9 +47,12 @@ public final class Juego {
         
         habitacionF.setSalida("sur", habitacionBoss);
         habitacionF.setSalida("oeste", habitacionD);
+        habitacionF.setSalida("este", habitacionArcade);
         
         habitacionOscura.setSalida("este", habitacionBoss);
         habitacionOscura.setSalida("norte", habitacionEspecial);
+        
+        habitacionArcade.setSalida("oeste", habitacionF);
     }
 
     public boolean direccionValida(String direccion) {
@@ -56,6 +60,7 @@ public final class Juego {
             case "CONTROL" -> {return true;}
             case "B" -> {return true;}
             case "I" -> {return true;}
+            case "T" -> {return true;}
         }
  
         switch (direccion.toUpperCase()) {
