@@ -25,7 +25,7 @@ public class App extends Application {
 
     private static final ImageView imageView = new ImageView("/assets/sprites/spriteAnimacion2.png"), taunt = new ImageView("/assets/sprites/taunts.png"), flash = new ImageView("/assets/sprites/flash.png"), instruccion = new ImageView("/assets/imagenes/iluminar.png");
     //private static final ImageView[] costumes = {new ImageView("")};
-    private boolean cinematica = false, specialist = false, accionesReservadas = false, oscurecido = true, keySwap = false;
+    private boolean cinematica = false, specialist = false, accionesReservadas = false, oscurecido = true, keySwap = false, desactivarTeclado = false;
     private SpriteAnimation animacionCinematica, animacionTaunt;
     private Movimiento movimiento;
     private String tecla, ultimoComando = "";
@@ -64,6 +64,7 @@ public class App extends Application {
         root.getChildren().add(taunt);
         flash.setVisible(false);
         taunt.setVisible(false);
+        //scene.getRoot().fireEvent(KeyEvent.KEY_PRESSED);
 
         /**
          * Creacion de la animación
@@ -71,101 +72,100 @@ public class App extends Application {
         animacionCinematica = new SpriteAnimation(imageView, 10, 2, 2, 3, 38, 32, Duration.seconds(0.8));
         animacionTaunt = new SpriteAnimation(taunt, 1, 1, 0, 0, 40, 40, Duration.seconds(0.5));
 
+        if (leerFichero("automatico.txt").equals("No existe")) {
+            desactivarTeclado = true;
+        }
+
         /**
          * Control de teclas presionadas y su uso
          */
         scene.setOnKeyPressed((var event) -> {
-            if (!cinematica && oscurecido) {
-                tecla = event.getCode().toString();
-                if (keySwap) {
-                    cambioTecla(tecla);
-                }
-                if (j.direccionValida(tecla)) {
-                    switch (tecla) {
-                        case "B" -> {
-                            addHistorial(tecla);
-                            j.buscarEnHabitacionEspecial();
-                            return;
-                        }
-                        case "CONTROL" -> {
-                            addHistorial(tecla);
-                            if (!accionesReservadas) {
-                                teclaEspecial();
-                            } else System.out.println("Ya has activado una acción especial, está limitada a una por partida");
-                            return;
-                        }
-                        case "T" -> {
-                            addHistorial(tecla);
-                            cinematica = true;
-                            Random r = new Random();
-                            
-                            num = r.nextInt(4);
-                            animacionTaunt.setOffSetY(num * 40);
-                            num = r.nextInt(5);
-                            animacionTaunt.setOffSetX(num * 40);
-                            
-                            imageView.setVisible(false);
-                            taunt.setVisible(true);
-                            flash.setVisible(true);
-                            animacionTaunt.play();
-                            tauntTimeline.play();
-                            return;
-                        }
-                        case "W" -> {
-                            movimiento.setDuration(Duration.seconds(3.8));
-                            movimiento.moverArriba();
-                            if (!specialist) {
-                                animacionCinematica.setOffSetX(66);
-                            }
-                        }
-                        case "A" -> {
-                            movimiento.setDuration(Duration.seconds(3.8));
-                            movimiento.moverIzquierda();
-                            if (!specialist) {
-                                animacionCinematica.setOffSetX(192);
-                            }
-                        }
-                        case "S" -> {
-                            movimiento.setDuration(Duration.seconds(3.8));
-                            movimiento.moverAbajo();
-                            if (!specialist) {
-                                animacionCinematica.setOffSetX(2);
-                            }
-                        }
-                        case "D" -> {
-                            movimiento.setDuration(Duration.seconds(3.8));
-                            movimiento.moverDerecha();
-                            if (!specialist) {
-                                animacionCinematica.setOffSetX(130);
-                            }
-                        }
+            if (!desactivarTeclado) {
+                if (!cinematica && oscurecido) {
+                    tecla = event.getCode().toString();
+                    if (keySwap) {
+                        cambioTecla(tecla);
                     }
-                    addHistorial(tecla);
-                    animacionCinematica.play();
-                    cinematica = true;
-                    if (cinematicaTimeline != null) {
+                    if (j.direccionValida(tecla)) {
+                        switch (tecla) {
+                            case "B" -> {
+                                addHistorial(tecla);
+                                j.buscarEnHabitacionEspecial();
+                                return;
+                            }
+                            case "CONTROL" -> {
+                                addHistorial(tecla);
+                                if (!accionesReservadas) {
+                                    teclaEspecial();
+                                } else System.out.println("Ya has activado una acción especial, está limitada a una por partida");
+                                return;
+                            }
+                            case "T" -> {
+                                addHistorial(tecla);
+                                cinematica = true;
+                                Random r = new Random();
+                            
+                                num = r.nextInt(4);
+                                animacionTaunt.setOffSetY(num * 40);
+                                num = r.nextInt(5);
+                                animacionTaunt.setOffSetX(num * 40);
+                            
+                                imageView.setVisible(false);
+                                taunt.setVisible(true);
+                                flash.setVisible(true);
+                                animacionTaunt.play();
+                                tauntTimeline.play();
+                                return;
+                            }
+                            case "W" -> {
+                                movimiento.setDuration(Duration.seconds(3.8));
+                                movimiento.moverArriba();
+                                if (!specialist) {
+                                    animacionCinematica.setOffSetX(66);
+                                }
+                            }
+                            case "A" -> {
+                                movimiento.setDuration(Duration.seconds(3.8));
+                                movimiento.moverIzquierda();
+                                if (!specialist) {
+                                    animacionCinematica.setOffSetX(192);
+                                }
+                            }
+                            case "S" -> {
+                                movimiento.setDuration(Duration.seconds(3.8));
+                                movimiento.moverAbajo();
+                                if (!specialist) {
+                                    animacionCinematica.setOffSetX(2);
+                                }
+                            }
+                            case "D" -> {
+                                movimiento.setDuration(Duration.seconds(3.8));
+                                movimiento.moverDerecha();
+                                if (!specialist) {
+                                    animacionCinematica.setOffSetX(130);
+                                }
+                            }
+                        }
+                        addHistorial(tecla);
+                        animacionCinematica.play();
+                        cinematica = true;
+                        if (cinematicaTimeline != null) {
                         cinematicaTimeline.stop();
+                        }
+                        cinematicaTimeline.play();
                     }
-                    cinematicaTimeline.play();
+                } else if (!cinematica && !oscurecido) {
+                    tecla = event.getCode().toString();
+                    if (tecla.equals("I")) {
+                        addHistorial(tecla);
+                        ocultarOscuridad();
+                    }
                 }
-            } else if (!cinematica && !oscurecido) {
-                tecla = event.getCode().toString();
-                if (tecla.equals("I")) {
-                    addHistorial(tecla);
-                    ocultarOscuridad();
-                }
-            }
+            }    
         });
 
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
-    
-    private void desactivarEventos(Scene scene) {
-        //Lo he buscado en internet
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, (var event) -> {
-            event.consume();
-        });
     }
     
     public void addHistorial(String comando) {
@@ -235,13 +235,12 @@ public class App extends Application {
      * @return Linea leida
      */
     public static String leerFichero(String ruta) {
-        String devolver = "";
+        String devolver;
         try {
             try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
                 devolver = br.readLine();
             }
-        } catch (FileNotFoundException e) {
-        } catch (IOException ex) {}
+        } catch (IOException ex) {return "No existe";}
         return devolver;
     }
     
