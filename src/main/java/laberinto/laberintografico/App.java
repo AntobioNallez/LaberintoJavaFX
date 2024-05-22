@@ -25,7 +25,6 @@ public class App extends Application {
     private static final ImageView imageView = new ImageView("/assets/spriteAnimacion2.png"), taunt = new ImageView("/assets/taunts.png"), flash = new ImageView("/assets/flash.png"), instruccion = new ImageView("/assets/iluminar.png");
     private boolean cinematica = false, specialist = false, accionesReservadas = false, oscurecido = true, keySwap = false;
     private SpriteAnimation animacionCinematica, animacionTaunt;
-
     private Movimiento movimiento;
     private String tecla;
     private int fondo = 1, num;
@@ -70,7 +69,6 @@ public class App extends Application {
          * Control de teclas presionadas y su uso
          */
         scene.setOnKeyPressed((var event) -> {
-            tecla = event.getCode().toString();
             if (!cinematica && oscurecido) {
                 tecla = event.getCode().toString();
                 if (keySwap) {
@@ -85,9 +83,7 @@ public class App extends Application {
                         case "CONTROL" -> {
                             if (!accionesReservadas) {
                                 teclaEspecial();
-                            } else {
-                                System.out.println("Ya has activado una acción especial, está limitada a una por partida");
-                            }
+                            } else System.out.println("Ya has activado una acción especial, está limitada a una por partida");
                             return;
                         }
                         case "T" -> {
@@ -144,8 +140,11 @@ public class App extends Application {
                     }
                     cinematicaTimeline.play();
                 }
-            } else if (!cinematica && !oscurecido && tecla.equals("I")) {
-                ocultarOscuridad();
+            } else if (!cinematica && !oscurecido) {
+                tecla = event.getCode().toString();
+                if (tecla.equals("I")) {
+                    ocultarOscuridad();
+                }
             }
         });
 
@@ -183,31 +182,23 @@ public class App extends Application {
             Background newBackground = new Background(new BackgroundImage(newBackgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, null));
             root.setBackground(newBackground);
             switch (j.getDescripcion()) {
-                case "6" ->
-                    mostrarMensajeFinal("Final 1: Te quedaste atrapado en la habitación trampa.");
+                case "6" -> mostrarMensajeFinal("Final 1: Te quedaste atrapado en la habitación trampa.");
                 case "8" -> {
                     oscurecido = false;
                     instruccion.setVisible(true);
                     oscuridad.setVisible(true);
                     oscuridad.setOpacity(0.9);
                 }
-                case "9" ->
-                    cargarFXML(primaryStage, "Combate.fxml", "Combate Final", true);
-                case "10" -> {
-                    cargarFXML(primaryStage, "Arcade.fxml", "Arcade", false);
-                }
+                case "9" -> cargarFXML(primaryStage, "Combate.fxml", "Combate Final", true);
+                case "10" -> cargarFXML(primaryStage, "Arcade.fxml", "Arcade", false);
             }
 
             movimiento.setDuration(Duration.millis(1));
             switch (tecla) {
-                case "W" ->
-                    movimiento.moverAbajo();
-                case "A" ->
-                    movimiento.moverDerecha();
-                case "D" ->
-                    movimiento.moverIzquierda();
-                case "S" ->
-                    movimiento.moverArriba();
+                case "W" -> movimiento.moverAbajo();
+                case "A" -> movimiento.moverDerecha();
+                case "D" -> movimiento.moverIzquierda();
+                case "S" -> movimiento.moverArriba();
             }
             cinematica = false;
         }));
@@ -233,16 +224,29 @@ public class App extends Application {
             } else {
                 primaryStage.hide();
             }
+            Stage stage2;
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
                 AnchorPane rootAnchor = loader.load();
                 Scene escena2 = new Scene(rootAnchor, 600, 400);
-                Stage stage2 = new Stage();
+                stage2 = new Stage();
                 stage2.setScene(escena2);
                 stage2.setTitle(titulo);
                 stage2.show();
             } catch (IOException e) {
+                stage2 = new Stage();
+                stage2.close();
             }
+            stage2.setOnCloseRequest((var event) -> {
+                if (!cerrar) {
+                    primaryStage.show();
+                    j.irA("oeste");
+                    fondo = Integer.parseInt(j.getDescripcion());
+                    Image newBackgroundImage = new Image("assets/sala" + fondo + ".png");
+                    Background newBackground = new Background(new BackgroundImage(newBackgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, null));
+                    root.setBackground(newBackground);
+                }
+            });
         });
     }
 

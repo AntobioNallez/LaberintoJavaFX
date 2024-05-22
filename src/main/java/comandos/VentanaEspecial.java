@@ -27,15 +27,22 @@ public class VentanaEspecial extends Stage {
         setTitle("Acciones Especiales");
 
         Button btnAccion1 = new Button("Dance");
+        Button btnAccion2 = new Button("Random Keyboard");
 
         btnAccion1.setOnAction((var e) -> {
             actualizarAnimacion(animacion);
             app.setSpecialist();
             close();
         });
+        
+        btnAccion2.setOnAction((var e2) -> {
+            app.cambiarTeclado();
+            close();
+        });
 
         VBox root = new VBox(10);
         root.getChildren().addAll(btnAccion1);
+        root.getChildren().add(btnAccion2);
         Scene specialScene = new Scene(root, 200, 150);
 
         setScene(specialScene);
