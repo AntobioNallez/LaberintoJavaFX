@@ -4,19 +4,12 @@
  */
 package laberinto.laberintografico;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.fxml.*;
+import javafx.scene.control.*;
+import javafx.scene.image.*;
 
 /**
  * FXML Controller class
@@ -24,6 +17,8 @@ import javafx.scene.image.ImageView;
  * @author Antonio
  */
 public class ArcadeController implements Initializable {
+
+    private int monedas;
 
     @FXML
     private Button buttonDisfraz;
@@ -46,30 +41,20 @@ public class ArcadeController implements Initializable {
     @FXML
     private ImageView imgObjeto;
 
-    private int monedas;
-    private final Image imgX = new Image("/assets/cruz.png"), imgTick = new Image("/assets/tick.png");
+    private final Image imgX = new Image("/assets/imagenes/cruz.png"), imgTick = new Image("/assets/imagenes/tick.png");
 
     public ArcadeController() {
-        try {
-            BufferedReader br = new BufferedReader(new FileReader("monedas.txt"));
-            String linea = br.readLine();
-            if (linea != null) {
-                this.monedas = Integer.parseInt(linea);
-            } else {
-                this.monedas = 50;
-            }
-        } catch (IOException e) {
-            monedas = 50;
+        String linea = App.leerFichero("info/monedas.txt");
+        if (linea != null) {
+            this.monedas = Integer.parseInt(linea);
+        } else {
+            this.monedas = 50;
         }
     }
 
     @FXML
     private void volverMapa() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Salir del arcade");
-        alert.setHeaderText(null);
-        alert.setContentText("Para salir del arcade cierra la ventana dandole click a la X de cerrar ventana");
-        alert.showAndWait();
+        App.mostrarMensajeFinal("Para salir del arcade cierra la ventana dandole click a la X de cerrar ventana", false);
     }
 
     /**
@@ -82,8 +67,9 @@ public class ArcadeController implements Initializable {
 
     @FXML
     private void disfrazGamble(ActionEvent event) {
-        if (monedas >= 5) {
+        if (monedas >= 5 && !disfrazPlus.isVisible()) {
             monedas -= 5;
+            App.escribirFichero("info/monedas.txt", String.valueOf(monedas));
             imgDisf.setVisible(true);
             if (Math.random() < 0.05) {
                 imgDisf.setImage(imgTick);
@@ -97,8 +83,9 @@ public class ArcadeController implements Initializable {
 
     @FXML
     private void itemGamble(ActionEvent event) {
-        if (monedas >= 5) {
+        if (monedas >= 5 && !itemPlus.isVisible()) {
             monedas -= 5;
+            App.escribirFichero("info/monedas.txt", String.valueOf(monedas));
             imgObjeto.setVisible(true);
             if (Math.random() < 0.05) {
                 imgObjeto.setImage(imgTick);
@@ -109,5 +96,4 @@ public class ArcadeController implements Initializable {
             }
         }
     }
-
 }

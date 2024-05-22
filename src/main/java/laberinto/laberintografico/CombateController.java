@@ -47,7 +47,7 @@ public class CombateController {
             huir.setText("Huir");
             atack.setText("Atacar");
             label.setText("Has utilizado Fuerza Lunar");
-        } else App.mostrarMensajeFinal("Huiste del combate. Final 4 Salir por patas");
+        } else App.mostrarMensajeFinal("Huiste del combate. Final 4 Salir por patas", true);
     }
 
     @FXML
@@ -63,12 +63,12 @@ public class CombateController {
             label.setText("Has utilizado Megacuerno");
             barraJefe.setProgress(barraJefe.getProgress() - (xerneas.calcularDanio(poderBase) * critico) / 70);
             if (barraJefe.getProgress() <= 0) {
-                App.mostrarMensajeFinal("Ganaste el combate felicidades. Final 2");
+                App.mostrarMensajeFinal("Ganaste el combate felicidades. Final 2", true);
                 return;
             }
             barraXerneas.setProgress(barraXerneas.getProgress() - (dragonite.calcularDanio(poderBase) * critico2) / 72);
             if (barraXerneas.getProgress() <= 0) {
-                App.mostrarMensajeFinal("Oh no perdiste el combate. Final 3");
+                App.mostrarMensajeFinal("Oh no perdiste el combate. Final 3", true);
                 return;
             }
             huir.setText("Huir");

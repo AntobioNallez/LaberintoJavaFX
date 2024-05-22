@@ -1,6 +1,7 @@
 package laberinto.laberintografico;
 
 import comandos.*;
+import java.io.*;
 import javafx.animation.*;
 import javafx.application.*;
 import javafx.fxml.FXMLLoader;
@@ -10,8 +11,8 @@ import javafx.scene.image.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import java.io.IOException;
 import java.util.Random;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -22,25 +23,30 @@ import javafx.scene.shape.Rectangle;
  */
 public class App extends Application {
 
-    private static final ImageView imageView = new ImageView("/assets/spriteAnimacion2.png"), taunt = new ImageView("/assets/taunts.png"), flash = new ImageView("/assets/flash.png"), instruccion = new ImageView("/assets/iluminar.png");
+    private static final ImageView imageView = new ImageView("/assets/sprites/spriteAnimacion2.png"), taunt = new ImageView("/assets/sprites/taunts.png"), flash = new ImageView("/assets/sprites/flash.png"), instruccion = new ImageView("/assets/imagenes/iluminar.png");
+    //private static final ImageView[] costumes = {new ImageView("")};
     private boolean cinematica = false, specialist = false, accionesReservadas = false, oscurecido = true, keySwap = false;
     private SpriteAnimation animacionCinematica, animacionTaunt;
     private Movimiento movimiento;
-    private String tecla;
-    private int fondo = 1, num;
+    private String tecla, ultimoComando = "";
+    private int fondo = 1, num, cuenta = 0;
     private Timeline cinematicaTimeline, tauntTimeline;
     private Rectangle oscuridad;
     private Juego j;
     private StackPane root;
+    private Label l = new Label();
 
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.setOnCloseRequest((var event) -> {System.exit(0);});
+        secondaryStage();
         j = new Juego();
         root = new StackPane();
         Scene scene = new Scene(root, 600, 400);
         movimiento = new Movimiento(imageView);
-        Image img = new Image("assets/sala" + fondo + ".png");
-
+        Image img = new Image("assets/habitaciones/sala" + fondo + ".png");
+        escribirFichero("info/monedas.txt", "0");
+        
         instruccion.setVisible(false);
         instruccion.setOpacity(0.7);
         Background bc = new Background(new BackgroundImage(img, BackgroundRepeat.SPACE, BackgroundRepeat.SPACE, BackgroundPosition.CENTER, null));
@@ -77,26 +83,27 @@ public class App extends Application {
                 if (j.direccionValida(tecla)) {
                     switch (tecla) {
                         case "B" -> {
+                            addHistorial(tecla);
                             j.buscarEnHabitacionEspecial();
                             return;
                         }
                         case "CONTROL" -> {
+                            addHistorial(tecla);
                             if (!accionesReservadas) {
                                 teclaEspecial();
                             } else System.out.println("Ya has activado una acción especial, está limitada a una por partida");
                             return;
                         }
                         case "T" -> {
+                            addHistorial(tecla);
                             cinematica = true;
                             Random r = new Random();
+                            
                             num = r.nextInt(4);
                             animacionTaunt.setOffSetY(num * 40);
-                            if (num == 3) {
-                                num = r.nextInt(4);
-                            } else {
-                                num = r.nextInt(5);
-                            }
+                            num = r.nextInt(5);
                             animacionTaunt.setOffSetX(num * 40);
+                            
                             imageView.setVisible(false);
                             taunt.setVisible(true);
                             flash.setVisible(true);
@@ -133,6 +140,7 @@ public class App extends Application {
                             }
                         }
                     }
+                    addHistorial(tecla);
                     animacionCinematica.play();
                     cinematica = true;
                     if (cinematicaTimeline != null) {
@@ -143,6 +151,7 @@ public class App extends Application {
             } else if (!cinematica && !oscurecido) {
                 tecla = event.getCode().toString();
                 if (tecla.equals("I")) {
+                    addHistorial(tecla);
                     ocultarOscuridad();
                 }
             }
@@ -151,22 +160,103 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+    
+    private void desactivarEventos(Scene scene) {
+        //Lo he buscado en internet
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, (var event) -> {
+            event.consume();
+        });
+    }
+    
+    public void addHistorial(String comando) {
+        if (ultimoComando.equals(comando)) cuenta++;
+        else cuenta = 1;
+        
+        ultimoComando = comando;
+        
+        if (cuenta > 1) l.setText(l.getText() + "(" + cuenta + "x)");
+        else l.setText(l.getText() + "\n" + comando);
+    }
+    
+    private void secondaryStage() {
+        Stage secondaryStage = new Stage();
+        secondaryStage.setTitle("Historial de comandos");
+        StackPane secondaryRoot = new StackPane();
+        secondaryRoot.getChildren().add(l);
+        Scene secondaryScene = new Scene(secondaryRoot, 300, 200);
+        secondaryStage.setScene(secondaryScene);
+        secondaryStage.show();
+        secondaryStage.setX(100);
+        secondaryStage.setY(100);
+        Button exportarTxt = new Button();
+        exportarTxt.setText("Exportar Historial");
+        exportarTxt.setTranslateX(90);
+        exportarTxt.setLayoutY(100);
+        secondaryRoot.getChildren().add(exportarTxt);
+        exportarTxt.setOnAction((var event) -> {
+            File f = new File("historial.txt");
+            try {
+                try (BufferedWriter bwh = new BufferedWriter(new FileWriter(f))) {
+                    bwh.write(l.getText());
+                    System.out.println("Historial guardado en un txt");
+                }
+            } catch (IOException ex) {} 
+        });
+    }
 
     /**
      * Metodo que al ser llamado crea un mensaje de alerta marcando el fin del
      * juego para posteriormente cerrarlo
      *
      * @param mensaje Mensaje que se va a mostrar cuando salga la alerta
+     * @param cerrar Boolean que determina si el juego tiene que cerrarse o no
      */
-    public static void mostrarMensajeFinal(String mensaje) {
+    public static void mostrarMensajeFinal(String mensaje, boolean cerrar) {
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Fin del Juego");
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setHeaderText(null);
             alert.setContentText(mensaje);
-            alert.showAndWait();
-            System.exit(0);
+            if (cerrar) {
+                alert.setAlertType(Alert.AlertType.WARNING);
+                alert.setTitle("Fin del Juego");
+                alert.showAndWait();
+                System.exit(0);
+            } else {
+                alert.setTitle("Aviso");
+                alert.showAndWait();
+            }
         });
+    }
+    
+    /**
+     * Metodo estático que lee un archivo y devuelve la linea leida
+     * 
+     * @param ruta Ruta del archivo
+     * @return Linea leida
+     */
+    public static String leerFichero(String ruta) {
+        String devolver = "";
+        try {
+            try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+                devolver = br.readLine();
+            }
+        } catch (FileNotFoundException e) {
+        } catch (IOException ex) {}
+        return devolver;
+    }
+    
+    /**
+     * Metodo estatico que escribe en un archivo una string
+     * 
+     * @param ruta Ruta del archivo
+     * @param escribir String a escribir
+     */
+    public static void escribirFichero(String ruta, String escribir) {
+        try {
+            try (BufferedWriter bw = new BufferedWriter(new FileWriter(ruta))) {
+                bw.write(escribir);
+            }
+        } catch (IOException e) {}
     }
 
     /**
@@ -178,11 +268,11 @@ public class App extends Application {
         cinematicaTimeline = new Timeline(new KeyFrame(Duration.seconds(4.5), e -> {
             j.irA(tecla);
             fondo = Integer.parseInt(j.getDescripcion());
-            Image newBackgroundImage = new Image("assets/sala" + fondo + ".png");
+            Image newBackgroundImage = new Image("assets/habitaciones/sala" + fondo + ".png");
             Background newBackground = new Background(new BackgroundImage(newBackgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, null));
             root.setBackground(newBackground);
             switch (j.getDescripcion()) {
-                case "6" -> mostrarMensajeFinal("Final 1: Te quedaste atrapado en la habitación trampa.");
+                case "6" -> mostrarMensajeFinal("Final 1: Te quedaste atrapado en la habitación trampa.", true);
                 case "8" -> {
                     oscurecido = false;
                     instruccion.setVisible(true);
@@ -242,7 +332,7 @@ public class App extends Application {
                     primaryStage.show();
                     j.irA("oeste");
                     fondo = Integer.parseInt(j.getDescripcion());
-                    Image newBackgroundImage = new Image("assets/sala" + fondo + ".png");
+                    Image newBackgroundImage = new Image("assets/habitaciones/sala" + fondo + ".png");
                     Background newBackground = new Background(new BackgroundImage(newBackgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, null));
                     root.setBackground(newBackground);
                 }

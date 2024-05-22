@@ -16,12 +16,12 @@
       <Button fx:id="huir" layoutX="316.0" layoutY="335.0" mnemonicParsing="false" onAction="#huirPorPatas" prefHeight="25.0" prefWidth="270.0" text="Huir" />
       <ImageView fitHeight="182.0" fitWidth="210.0" layoutX="46.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../assets/xerneas.png" />
+            <Image url="@../../assets/imagenes/xerneas.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="182.0" fitWidth="182.0" layoutX="402.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../assets/jefe.png" />
+            <Image url="@../../assets/imagenes/jefe.png" />
          </image>
       </ImageView>
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#689e9e" height="130.0" layoutX="16.0" layoutY="256.0" stroke="BLACK" strokeType="INSIDE" width="270.0" />

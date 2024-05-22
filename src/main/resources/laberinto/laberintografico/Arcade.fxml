@@ -11,7 +11,7 @@
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../assets/fondo_arcade.png" />
+            <Image url="@../../assets/habitaciones/fondo_arcade.png" />
          </image>
       </ImageView>
       <Button fx:id="buttonDisfraz" layoutX="76.0" layoutY="289.0" mnemonicParsing="false" onAction="#disfrazGamble" text="GASTAR 5 MONEDAS" />
@@ -38,12 +38,12 @@
       </Label>
       <ImageView fx:id="imgDisf" fitHeight="150.0" fitWidth="200.0" layoutX="61.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../../assets/cruz.png" />
+            <Image url="@../../assets/imagenes/cruz.png" />
          </image>
       </ImageView>
       <ImageView fx:id="imgObjeto" fitHeight="150.0" fitWidth="200.0" layoutX="384.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true" visible="false">
          <image>
-            <Image url="@../../assets/cruz.png" />
+            <Image url="@../../assets/imagenes/cruz.png" />
          </image>
       </ImageView>
       <Button fx:id="buttonVolver" layoutX="271.0" layoutY="361.0" mnemonicParsing="false" onAction="#volverMapa" text="VOLVER" />

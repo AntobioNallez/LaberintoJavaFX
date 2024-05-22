@@ -6,8 +6,6 @@ package laberinto.laberintografico;
  */
 public final class Juego {
 
-    boolean objetoClave = false;
-
     private Habitacion habitacionActual;
     private Habitacion habitacionInicial;
     private Habitacion habitacionAnterior;
@@ -94,8 +92,24 @@ public final class Juego {
     }
 
     public void buscarEnHabitacionEspecial() {
-        if (habitacionActual.getDescripcion().equals("4") && !objetoClave) {
-            objetoClave = true;
+        if (habitacionActual.getDescripcion().equals("4")) {
+        String filePath = "info/monedas.txt";
+        String linea = App.leerFichero(filePath);
+        int monedas = 0;
+        
+        if (linea != null) {
+            monedas = Integer.parseInt(linea);
+        }
+        
+        int cantidad;
+            if (Math.random() < 0.1) cantidad = 10;
+            else {
+                if (Math.random() < 0.5) cantidad = 5;
+                else cantidad = 1;
+            }
+            monedas += cantidad;
+            
+            App.escribirFichero(filePath, String.valueOf(monedas));
         } else {
             System.out.println("No hay nada especial en esta habitación.");
         }
