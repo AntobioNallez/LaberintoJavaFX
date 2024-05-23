@@ -6,9 +6,7 @@ Esto es una trabajo de clase así que tampoco hay gran cosa.
 ## **Funcionalidades:**
 - Movimiento del personaje principal utilizando teclas direccionales.
 - Animación de sprites para una experiencia más inmersiva.
+- Movimiento del personaje mediante lectura de un txt
 
 ## **Progreso:**
-Por ahora, se ha completado la animación de sprites. Se están trabajando en nuevas funcionalidades y mejoras para hacer que el juego sea funcional.
-
-
-POSDATA: Si hay algun error es probable que algo se haya corrompido cuando lo subi a github hizo conflicto con los archivos ya existentes y algunas cosas se perdieron.
+Ya esta todo lo que queria hacer al menos por ahora igual en un futuro cambio alguna cosa no lo se.
