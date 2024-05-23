@@ -1,11 +1,11 @@
 laberinto\laberintografico\Juego.class
 laberinto\laberintografico\Ayudante.class
 laberinto\laberintografico\Habitacion.class
+comandos\ModoAutomatico.class
 module-info.class
 comandos\Movimiento.class
 laberinto\laberintografico\ArcadeController.class
 laberinto\laberintografico\App.class
 laberinto\laberintografico\CombateController.class
 comandos\SpriteAnimation.class
-comandos\LeerArchivo.class
 comandos\VentanaEspecial.class

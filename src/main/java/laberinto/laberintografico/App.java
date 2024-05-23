@@ -12,20 +12,19 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import java.util.Random;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- * @version 0.4
+ * @version 0.5
  *
  * @author Antonio
  */
 public class App extends Application {
 
-    private static final ImageView imageView = new ImageView("/assets/sprites/spriteAnimacion2.png"), taunt = new ImageView("/assets/sprites/taunts.png"), flash = new ImageView("/assets/sprites/flash.png"), instruccion = new ImageView("/assets/imagenes/iluminar.png");
-    //private static final ImageView[] costumes = {new ImageView("")};
-    private boolean cinematica = false, specialist = false, accionesReservadas = false, oscurecido = true, keySwap = false, desactivarTeclado = false;
+    private static final ImageView IMAGE_VIEW = new ImageView("/assets/sprites/spriteAnimacion2.png"), taunt = new ImageView("/assets/sprites/taunts.png"), flash = new ImageView("/assets/sprites/flash.png"), instruccion = new ImageView("/assets/imagenes/iluminar.png");
+    private static final ImageView[] arrayImagenes = {IMAGE_VIEW, flash, taunt};
+    private boolean cinematica = false, specialist = false, accionesReservadas = false, oscurecido = true, keySwap = false, desactivarTeclado = false, existe = false, combate = false;
     private SpriteAnimation animacionCinematica, animacionTaunt;
     private Movimiento movimiento;
     private String tecla, ultimoComando = "";
@@ -34,46 +33,47 @@ public class App extends Application {
     private Rectangle oscuridad;
     private Juego j;
     private StackPane root;
-    private Label l = new Label();
+    private final Label l = new Label();
+    private Scene scene;
+    private Stage secondaryStage;
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setOnCloseRequest((var event) -> {System.exit(0);});
-        secondaryStage();
-        j = new Juego();
-        root = new StackPane();
-        Scene scene = new Scene(root, 600, 400);
-        movimiento = new Movimiento(imageView);
-        Image img = new Image("assets/habitaciones/sala" + fondo + ".png");
-        escribirFichero("info/monedas.txt", "0");
-        
-        instruccion.setVisible(false);
-        instruccion.setOpacity(0.7);
-        Background bc = new Background(new BackgroundImage(img, BackgroundRepeat.SPACE, BackgroundRepeat.SPACE, BackgroundPosition.CENTER, null));
-        root.setBackground(bc);
+        setup();
         crearTimeline(primaryStage);
-
-        oscuridad = new Rectangle(600, 400, Color.BLACK);
-        oscuridad.setOpacity(0.9);
-        oscuridad.setTranslateZ(1);
-        root.getChildren().add(imageView);
-        root.getChildren().add(oscuridad);
-        oscuridad.setVisible(false);
-        root.getChildren().add(instruccion);
-        root.getChildren().add(flash);
-        root.getChildren().add(taunt);
-        flash.setVisible(false);
-        taunt.setVisible(false);
-        //scene.getRoot().fireEvent(KeyEvent.KEY_PRESSED);
-
+        
         /**
          * Creacion de la animación
          */
-        animacionCinematica = new SpriteAnimation(imageView, 10, 2, 2, 3, 38, 32, Duration.seconds(0.8));
+        animacionCinematica = new SpriteAnimation(IMAGE_VIEW, 10, 2, 2, 3, 38, 32, Duration.seconds(0.8));
         animacionTaunt = new SpriteAnimation(taunt, 1, 1, 0, 0, 40, 40, Duration.seconds(0.5));
-
-        if (leerFichero("automatico.txt").equals("No existe")) {
+        
+        /**
+         * Si existe el archivo automatico.txt se creara automatico2.txt para evitar destruir el ya existente, y este hara lo que aparezca en el txt
+         * tiene que ser letra y salto de linea, sin 2x ni ningun caracter extraño no funciona ni el combate ni arcade ya que son fxml aparte
+         */
+        if (new File("automatico2.txt").exists()) {
+            existe = true;
             desactivarTeclado = true;
+            Thread ia = new Thread(() -> {
+                while (true) {
+                    try {
+                        Thread.sleep(6800);
+                        if (combate) {
+                            return;
+                        }
+                        Platform.runLater(() -> {
+                            desactivarTeclado = false;
+                            scene.getRoot().fireEvent(ModoAutomatico.lectura());
+                        });
+                    } catch (InterruptedException e) {}
+                }
+            });
+            ia.setDaemon(true);
+            if (!combate) {
+                ia.start();
+            }
         }
 
         /**
@@ -110,7 +110,7 @@ public class App extends Application {
                                 num = r.nextInt(5);
                                 animacionTaunt.setOffSetX(num * 40);
                             
-                                imageView.setVisible(false);
+                                IMAGE_VIEW.setVisible(false);
                                 taunt.setVisible(true);
                                 flash.setVisible(true);
                                 animacionTaunt.play();
@@ -150,7 +150,7 @@ public class App extends Application {
                         animacionCinematica.play();
                         cinematica = true;
                         if (cinematicaTimeline != null) {
-                        cinematicaTimeline.stop();
+                            cinematicaTimeline.stop();
                         }
                         cinematicaTimeline.play();
                     }
@@ -161,25 +161,37 @@ public class App extends Application {
                         ocultarOscuridad();
                     }
                 }
-            }    
+            }
+            if (existe) {
+                desactivarTeclado = true;
+            }
         });
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
     
+    /**
+     * Metodo que añade la tecla recibida al historial
+     * 
+     * @param comando Tecla accionada
+     */
     public void addHistorial(String comando) {
         if (ultimoComando.equals(comando)) cuenta++;
         else cuenta = 1;
         
         ultimoComando = comando;
         
-        if (cuenta > 1) l.setText(l.getText() + "(" + cuenta + "x)");
+        if (cuenta == 2) l.setText(l.getText() + "(2x)");
+        else if (cuenta > 2 && cuenta <= 10) l.setText(l.getText().substring(0, l.getText().length() -3)  + cuenta + "x)");
+        else if (cuenta > 10 && cuenta <= 100) l.setText(l.getText().substring(0, l.getText().length() - 4) + cuenta + "x)");
+        else if (cuenta > 100 && cuenta <= 1000) l.setText(l.getText().substring(0, l.getText().length() -5) + cuenta + "x)");
         else l.setText(l.getText() + "\n" + comando);
     }
-    
-    private void secondaryStage() {
-        Stage secondaryStage = new Stage();
+
+    private void setup() {
+        copiarArchivo("automatico.txt", "automatico2.txt");
+        secondaryStage = new Stage();
         secondaryStage.setTitle("Historial de comandos");
         StackPane secondaryRoot = new StackPane();
         secondaryRoot.getChildren().add(l);
@@ -195,13 +207,34 @@ public class App extends Application {
         secondaryRoot.getChildren().add(exportarTxt);
         exportarTxt.setOnAction((var event) -> {
             File f = new File("historial.txt");
-            try {
                 try (BufferedWriter bwh = new BufferedWriter(new FileWriter(f))) {
                     bwh.write(l.getText());
                     System.out.println("Historial guardado en un txt");
-                }
+                bwh.close();
             } catch (IOException ex) {} 
         });
+
+        j = new Juego();
+        root = new StackPane();
+        scene = new Scene(root, 600, 400);
+        movimiento = new Movimiento(IMAGE_VIEW);
+        Image img = new Image("assets/habitaciones/sala" + fondo + ".png");
+        escribirFichero("info/monedas.txt", "0");
+        
+        instruccion.setVisible(false);
+        instruccion.setOpacity(0.7);
+        Background bc = new Background(new BackgroundImage(img, BackgroundRepeat.SPACE, BackgroundRepeat.SPACE, BackgroundPosition.CENTER, null));
+        root.setBackground(bc);
+        
+        oscuridad = new Rectangle(600, 400, Color.BLACK);
+        oscuridad.setOpacity(0.9);
+        oscuridad.setTranslateZ(1);
+        oscuridad.setVisible(false);
+        flash.setVisible(false);
+        taunt.setVisible(false);
+        root.getChildren().addAll(arrayImagenes);
+        root.getChildren().add(oscuridad);
+        root.getChildren().add(instruccion);
     }
 
     /**
@@ -236,10 +269,9 @@ public class App extends Application {
      */
     public static String leerFichero(String ruta) {
         String devolver;
-        try {
-            try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
-                devolver = br.readLine();
-            }
+        try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+            devolver = br.readLine();
+            br.close();
         } catch (IOException ex) {return "No existe";}
         return devolver;
     }
@@ -251,10 +283,9 @@ public class App extends Application {
      * @param escribir String a escribir
      */
     public static void escribirFichero(String ruta, String escribir) {
-        try {
-            try (BufferedWriter bw = new BufferedWriter(new FileWriter(ruta))) {
-                bw.write(escribir);
-            }
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(ruta))) {
+            bw.write(escribir);
+            bw.close();
         } catch (IOException e) {}
     }
 
@@ -278,7 +309,11 @@ public class App extends Application {
                     oscuridad.setVisible(true);
                     oscuridad.setOpacity(0.9);
                 }
-                case "9" -> cargarFXML(primaryStage, "Combate.fxml", "Combate Final", true);
+                case "9" -> {
+                    cargarFXML(primaryStage, "Combate.fxml", "Combate Final", true);
+                    secondaryStage.close();
+                    combate = true;
+                }
                 case "10" -> cargarFXML(primaryStage, "Arcade.fxml", "Arcade", false);
             }
 
@@ -292,10 +327,10 @@ public class App extends Application {
             cinematica = false;
         }));
 
-        tauntTimeline = new Timeline(new KeyFrame(Duration.seconds(0.75), e -> {
+        tauntTimeline = new Timeline(new KeyFrame(Duration.seconds(0.75), (var e) -> {
             taunt.setVisible(false);
             flash.setVisible(false);
-            imageView.setVisible(true);
+            IMAGE_VIEW.setVisible(true);
             animacionTaunt.stop();
             cinematica = false;
         }));
@@ -388,5 +423,22 @@ public class App extends Application {
 
     public void cambiarTeclado() {
         keySwap = true;
+    }
+    
+    /**
+     * Metodo que copia un archivo y crea otro igual
+     * 
+     * @param archivoOrigen Ruta del archivo de origen
+     * @param archivoDestino Ruta del nuevo archivo
+     */
+    private static void copiarArchivo(String archivoOrigen, String archivoDestino) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(archivoOrigen));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(archivoDestino))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                writer.write(linea);
+                writer.newLine();
+            }
+        } catch (IOException e) {}
     }
 }
